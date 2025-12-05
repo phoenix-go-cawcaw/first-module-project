@@ -1,96 +1,58 @@
+<!-- Kuhle -->
 <script>
-import Profile from './components/Profile.vue';
-import Attendance from './components/Attendance.vue';
-import TimeOff from './components/TimeOff.vue';
-import Payroll from './components/Payroll.vue';
-import {attendance} from './attendance.json';
+import Header from './components/Header.vue';
+import SideBarNav from './components/SideBarNav.vue';
+import Login from './components/Login.vue';
 
 export default {
   name: 'App',
-  
+  components: {
+    Header, SideBarNav, Login
+  },
+  data() {
+    return {
+      darkMode: false,
+      isLoggedIn: false,
+      isCollapsed: false,
+    }
+  },
+  methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+    }
+  }
 }
 
 </script>
 
+
+
+<!-- Phoenix -->
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div id="app" :class="{ 'dark-mode': darkMode }">
 
-      <nav>
-        <RouterLink to="/"> Profile </RouterLink>
-        <RouterLink to="/attendance"> Attendance </RouterLink>
-        <RouterLink to="/timeoff"> Time Off </RouterLink>
-        <RouterLink to="/payroll"> Payroll </RouterLink>
-      </nav>
+    <div v-if="isLoggedIn">
+      <Header :darkMode="darkMode" @toggle-dark-mode="toggleDarkMode" @logout="logout" />
+
+      <div class="main-container">
+        <SideBarNav :isCollapsed="isCollapsed" />
+
+        <main class="main-content" :class="{ 'expanded': isCollapsed }">
+          <RouterView />
+        </main>
+      </div>
     </div>
-  </header>
 
-  <RouterView />
+    <div v-else>
+      <Login @login-success="loginSuccess" />
+    </div>
+  </div>
 </template>
+ 
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
+<!-- Zahraa -->
+<style></style>
