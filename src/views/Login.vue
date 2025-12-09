@@ -122,5 +122,14 @@ export default {
 
 
 <style>
-
+:root{
+  --primary:#000000;
+  --accent: #ff375f;
+  --surface: #ffffff;
+  --border: #e0e0e0;
+  --text: #1a1a1a;
+  --text-light: #666666;
+  --radius: #0px;
+  --glow:0 0 30px rgba(255, 55, 95, 0.1);
+}
 </style>

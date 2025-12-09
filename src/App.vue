@@ -11,12 +11,21 @@ export default {
     return {
       darkMode: false,
       isLoggedIn: false,
-      isCollapsed: false,
+      isSidebarCollapsed: false,
     }
   },
   methods: {
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
+    },
+    login(){
+      this.isLoggedIn = true;
+    },
+    logout(){
+      this.isLoggedIn = false;
+    },
+    toggleSidebar(){
+      this.isSidebarCollapsed = !this.isSidebarCollapsed;
     }
   }
 }
@@ -54,6 +63,29 @@ export default {
 
 body{
   background-color: aquamarine;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease;
+}
+
+#app.dark-mode{
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.main-container{
+  display:flex;
+  min-height:100vh;
+}
+
+.main-content{
+  flex:1;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.expand{
+  margin-left: 0;
 }
 
 </style>
