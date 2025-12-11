@@ -570,7 +570,7 @@ export default {
     transform: translateY(0)
 }
 
-@media (max-width:768px){
+@media (max-width:425px){
     .payslips-grid{
         grid-template-columns: 1fr
     }
