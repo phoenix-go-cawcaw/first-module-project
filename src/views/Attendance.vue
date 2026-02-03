@@ -11,7 +11,6 @@
             <div class="filter-group">
                 <label for="status-filter">Filter by Status</label>
                 <select id="status-filter" v-model="selectedStatus">
-                <select id="status-filter" v-model="selectedStatus">
                     <option value="all">All Status</option>
                     <option value="Present">Present</option>
                     <option value="Absent">Absent</option>
