@@ -10,7 +10,7 @@
 
             <div class="filter-group">
                 <label for="status-filter">Filter by Status</label>
-                <select id="status-filter" v-model="selectedStatus" >
+                <select id="status-filter" v-model="selectedStatus">
                     <option value="all">All Status</option>
                     <option value="Present">Present</option>
                     <option value="Absent">Absent</option>
@@ -24,7 +24,7 @@
 
         <div class="stats-section">
             <h3>Monthly Overview({{ currentMonthName }})</h3>
-            <div enter-class="stats-grid">
+            <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon present">📊</div>
                     <div class="stat-info">
@@ -32,7 +32,6 @@
                         <p class="stat-value">{{ totalEmployees }}</p>
                     </div>
                 </div>
-            </div>
 
             <div class="stat-card">
                 <div class="stat-icon present">✅</div>
@@ -59,11 +58,12 @@
             </div>
         </div>
     </div>
+    </div>
 
     <div class="calendar-section">
         <h3>Attendance Calendar - {{ currentMonthName }}</h3>
         <div class="calendar-controls">
-            <button @click="prevMonth" class="nav-btn">← Previous  </button>
+            <button @click="prevMonth" class="nav-btn">← Previous </button>
             <span class="current-month">{{ currentMonthName }} </span>
             <button @click="nextMonth" class="nav-btn">Next → </button>
         </div>
@@ -73,10 +73,11 @@
                 {{ day }}
             </div>
 
-            <div v-for="day in calendarDays" :key="day.date" class="calendar-day" :class="{'empty-day' : !day.inMonth}">
+            <div v-for="day in calendarDays" :key="day.date" class="calendar-day" :class="{ 'empty-day': !day.inMonth }">
                 <div class="day-number">{{ day.day }}</div>
                 <div v-if="day.inMonth" class="day-attendance">
-                    <div v-for="record in getAttendanceForDate(day.date)" :key="record.employeeId" class="employee-dot" :class="getStatusClass(record.status)" :title="`${record.name}: ${record.status}`">
+                    <div v-for="record in getAttendanceForDate(day.date)" :key="record.employeeId" class="employee-dot"
+                        :class="getStatusClass(record.status)" :title="`${record.name}: ${record.status}`">
                     </div>
                 </div>
             </div>
@@ -132,7 +133,8 @@
                         <td class="stat-cell">
                             <div class="attendance-percentage">
                                 <div class="percentage-bar">
-                                    <div class="percentage-fill" :style="{width: calculateAttendancePercentage(employee) + '%'}">
+                                    <div class="percentage-fill"
+                                        :style="{ width: calculateAttendancePercentage(employee) + '%' }">
                                     </div>
                                 </div>
                                 <span>{{ calculateAttendancePercentage(employee) }}%</span>
@@ -142,18 +144,19 @@
                 </tbody>
             </table>
         </div>
+        <button class="edit_btn">Edit</button>
     </div>
 </template>
 
 <script>
-    import{ref, computed, onMounted} from 'vue'
+import { ref, computed, onMounted } from 'vue'
     import attendanceData from '@/stores/attendance.json'
     
     export default {
         name: 'AttendanceView',
-        setup(){
+    setup() {
             const attendanceRecords = ref([])
-            const selectedMonth = ref(new Date().toISOString().slice(0,7))
+        const selectedMonth = ref(new Date().toISOString().slice(0, 7))
 
             const selectedStatus = ref('all')
             // const currentDate = ref(new Date())
@@ -164,13 +167,13 @@
             })
 
             const filteredAttendance = computed(() => {
-                const[year,month] = selectedMonth.value.split('-').map(Number)
+            const [year, month] = selectedMonth.value.split('-').map(Number)
 
                 return attendanceRecords.value.map(employee => {
-                    const filteredAttendance = employee.attendance.filter(record=> {
+                const filteredAttendance = employee.attendance.filter(record => {
                         const recordDate = new Date(record.date)
                         return recordDate.getFullYear() === year &&
-                               recordDate.getMonth() +1 === month
+                        recordDate.getMonth() + 1 === month
                     }) 
 
                     return {
@@ -185,53 +188,54 @@
             const averageAttendance = computed(() => {
                 if (filteredAttendance.value.length === 0) return 0
 
-                const totalDays= filteredAttendance.value.reduce((sum,emp) =>{
+            const totalDays = filteredAttendance.value.reduce((sum, emp) => {
                     return sum + emp.attendance.length
-                },0)
+            }, 0)
 
                 const presentDays = filteredAttendance.value.reduce((sum, emp) => {
                     const present = emp.attendance.filter(a => a.status === 'Present').length
 
                     return sum + present
-                },0)
+            }, 0)
 
-                return totalDays > 0? Math.round((presentDays / totalDays) * 100) : 0
+            return totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0
             })
 
-            const totalAbsences =computed(()=> {
-                return filteredAttendance.value.reduce((sum, emp)=> {
+        const totalAbsences = computed(() => {
+            return filteredAttendance.value.reduce((sum, emp) => {
                     return sum + emp.attendance.filter(a => a.status === 'Absent').length
-                },0)
+            }, 0)
             })
 
             const totalOnLeave = computed(() => {
-                return filteredAttendance.value.reduce((sum,emp)=>{
+            return filteredAttendance.value.reduce((sum, emp) => {
                     return sum + emp.attendance.filter(a => a.status === 'On Leave').length
-                },0)
+            }, 0)
             })
 
             const currentMonthName = computed(() => {
-                return new Date(selectedMonth.value + '-01').toLocaleDateString('en-US', {month: 'long', year: 'numeric'    
+            return new Date(selectedMonth.value + '-01').toLocaleDateString('en-US', {
+                month: 'long', year: 'numeric'
                 })  
             })
             const currentYear = computed(() => {
                 return new Date(selectedMonth.value + '-01').getFullYear()
             })
 
-            const displayedDates = computed(()=> {
+        const displayedDates = computed(() => {
                 const [year, month] = selectedMonth.value.split('-').map(Number)
                 const daysInMonth = new Date(year, month, 0).getDate()
                 const dates = []
 
-                for (let day = 1; day <= daysInMonth; day++){
+            for (let day = 1; day <= daysInMonth; day++) {
                     dates.push(`${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`)
                 }
 
-                return dates.slice(21,31)
+            return dates.slice(21, 31)
             })
 
             const calendarDays = computed(() => {
-                const [year,month] = selectedMonth.value.split('-').map(Number)
+            const [year, month] = selectedMonth.value.split('-').map(Number)
                 const firstDay = new Date(year, month - 1, 1)
                 const lastDay = new Date(year, month, 0)
                 const daysInMonth = lastDay.getDate()
